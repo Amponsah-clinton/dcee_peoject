@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DCEE StudyBuddy{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .navbar{
+            background-color:#000833 !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg  bg-info navbar-light">
+        <a style="font-weight: 600; font-size: 22px;color:#e2e2e2" class="navbar-brand">DCEE ChatBuddy</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+            {% if user.is_authenticated %}
+              <a class="nav-link" href="{% url 'question_answer' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+        {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a style="color: rgb(130, 255, 243) !important; font-weight: 700;" class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+            <li class="nav-item">
+                <a style="color: rgb(255, 234, 0) !important; font-weight: 700;" class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+        {% endif %}
+          </ul>
+        </div>
+      </nav>
+      
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+
+<style>
+    .nav-link{
+        color: white !important;
+ 
+    }
+</style>
+    
+   
+    <footer class="footer">
+        <div class="container">
+            <span  style="color:#f8f9fa !important; " class="text-muted">&copy; <span id="current-year"></span> DCEE StudyBuddy. All rights reserved.</span>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentYear = new Date().getFullYear();
+            document.getElementById("current-year").textContent = currentYear;
+        });
+    </script>
+        
+
+
+<style>
+        html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+.footer {
+    background-color: #000833 !important;
+    text-align: center;
+    padding: 1rem 0;
+    margin: 13rem 0;
+    color:#f8f9fa !important; 
+}
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

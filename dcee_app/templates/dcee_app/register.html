@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .nn{
+        padding: 0px 20rem !important;
+      }
+        .container {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            margin-bottom: 20px;
+        }
+        .container input[type="text"], .container input[type="email"], .container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .container input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .password-requirements {
+            list-style: none;
+            padding: 0;
+        }
+        .password-requirements li {
+            margin: 5px 0;
+        }
+        .password-requirements li.valid {
+            color: green;
+        }
+        .password-requirements li.invalid {
+            color: red;
+        }
+        .invalid { color: red; }
+        .valid { color: green; }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .navbar{
+            background-color:#000833 !important;
+            padding: 0px 10px 0px 10px ;
+        }
+
+    </style>
+
+<body>
+
+
+    <div class="nn">
+        <div class="container">
+            <h2 style="text-align: center; padding: 0.3rem 0px 0.2rem 0px;font-weight: 600;">Register</h2>
+            {% if form.errors %}
+            <div id="autoCloseAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>  {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}</strong> 
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            
+             
+            {% endif %}
+            <form id="register-form" method="POST">
+                {% csrf_token %}
+                Username:
+                {{ form.username }}
+                Email:
+                {{ form.email }}
+                <div class="password-container">
+                    Password:
+                    <input type="password" name="password1" id="id_password1" placeholder="Password" required>
+                    <i class="fas fa-eye toggle-password" id="toggle-password1"></i>
+                </div>
+                <div class="password-container">
+                    Repeat Password:
+                    <input type="password" name="password2" id="id_password2" placeholder="Confirm Password" required>
+                    <i class="fas fa-eye toggle-password" id="toggle-password2"></i>
+                </div>
+                <ul class="password-requirements">
+                    <li id="length" class="invalid">At least 8 characters</li>
+                    <li id="uppercase" class="invalid">At least one uppercase letter</li>
+                    <li id="lowercase" class="invalid">At least one lowercase letter</li>
+                    <li id="number" class="invalid">At least one number</li>
+                    <li id="special" class="invalid">At least one special character</li>
+                <div id="password-match" class="invalid">Passwords do not match</div>
+                </ul>
+                <input type="submit" value="Register">
+            </form>
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const password = document.getElementById('id_password1');
+        const confirm_password = document.getElementById('id_password2');
+        const passwordMatch = document.getElementById('password-match');
+        const requirements = {
+            length: document.getElementById('length'),
+            uppercase: document.getElementById('uppercase'),
+            lowercase: document.getElementById('lowercase'),
+            number: document.getElementById('number'),
+            special: document.getElementById('special')
+        };
+    
+        const validatePassword = () => {
+            const value = password.value;
+            let valid = true;
+    
+            if (value.length >= 8) {
+                requirements.length.classList.remove('invalid');
+                requirements.length.classList.add('valid');
+            } else {
+                requirements.length.classList.remove('valid');
+                requirements.length.classList.add('invalid');
+                valid = false;
+            }
+    
+            if (/[A-Z]/.test(value)) {
+                requirements.uppercase.classList.remove('invalid');
+                requirements.uppercase.classList.add('valid');
+            } else {
+                requirements.uppercase.classList.remove('valid');
+                requirements.uppercase.classList.add('invalid');
+                valid = false;
+            }
+    
+            if (/[a-z]/.test(value)) {
+                requirements.lowercase.classList.remove('invalid');
+                requirements.lowercase.classList.add('valid');
+            } else {
+                requirements.lowercase.classList.remove('valid');
+                requirements.lowercase.classList.add('invalid');
+                valid = false;
+            }
+    
+            if (/\d/.test(value)) {
+                requirements.number.classList.remove('invalid');
+                requirements.number.classList.add('valid');
+            } else {
+                requirements.number.classList.remove('valid');
+                requirements.number.classList.add('invalid');
+                valid = false;
+            }
+    
+            if (/[\W_]/.test(value)) {
+                requirements.special.classList.remove('invalid');
+                requirements.special.classList.add('valid');
+            } else {
+                requirements.special.classList.remove('valid');
+                requirements.special.classList.add('invalid');
+                valid = false;
+            }
+    
+            return valid;
+        };
+    
+        const checkPasswordMatch = () => {
+            if (password.value === confirm_password.value) {
+                passwordMatch.classList.remove('invalid');
+                passwordMatch.classList.add('valid');
+                passwordMatch.textContent = 'Passwords match';
+            } else {
+                passwordMatch.classList.remove('valid');
+                passwordMatch.classList.add('invalid');
+                passwordMatch.textContent = 'Passwords do not match';
+            }
+        };
+    
+        password.addEventListener('input', function() {
+            validatePassword();
+            checkPasswordMatch();
+        });
+    
+        confirm_password.addEventListener('input', checkPasswordMatch);
+    
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            if (!validatePassword() || password.value !== confirm_password.value) {
+                event.preventDefault();
+            }
+        });
+    
+        const togglePassword = document.querySelectorAll('.toggle-password');
+        togglePassword.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
+                }
+            });
+        });
+    });
+    </script>
+
+
+<script>
+    setTimeout(function() {
+      var alert = bootstrap.Alert.getOrCreateInstance(document.getElementById('autoCloseAlert'));
+      alert.close();
+    }, 10000);
+  </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.is_superuser %}
+        <h2 style="text-align: center; padding: 2rem 0px 2rem 0px; font-weight: 600;">Upload PDF</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button style="background-color: rgb(6, 0, 31); color:aliceblue" class="btn" type="submit">Upload</button>
+        </form>
+
+        <style>
+            .footer {
+                margin-top: 21.4rem !important;
+            }
+        </style>
+    {% else %}
+        <h3 style="text-align: center; padding: 9.6rem;">Only the Admin can upload a file.</h3>
+    {% endif %}
+{% endblock %}
